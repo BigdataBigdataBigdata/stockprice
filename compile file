@@ -1,0 +1,28 @@
+$ sudo su hdfs
+$ hadoop fs -mkdir /user/cloudera 
+$ hadoop fs -chown cloudera /user/cloudera
+$ exit
+
+$ sudo su cloudera
+$ hadoop fs -mkdir /user/cloudera/stockprice /user/cloudera/stockprice/input
+// created stock file contains stock info
+
+$ hadoop fs -put file* /user/cloudera/stockprice/input
+
+$ mkdir -p build
+$ javac -cp /usr/lib/hadoop/*:/usr/lib/hadoop-0.20-mapreduce/* StockPrice.java -d build -Xlint
+
+$ jar -cvf stock_price.jar -C build/ .
+$ hadoop jar stock_price.jar org.myorg.WordCount /user/cloudera/stockprice/input /user/cloudera/stockprice/output
+
+$ hadoop fs -cat /user/cloudera/stockprice/output/*
+
+//output
+Baba	87
+Goog	546
+Tsla	190
+VZ	47
+Yhoo	43
+
+
+
